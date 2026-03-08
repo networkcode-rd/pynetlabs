@@ -1,8 +1,14 @@
+# From XML to dictionary:-
+
 # Filtering interface information from the running configuration:-
+
+# This script is only to address static configuration.
 
 from ncclient import manager
 from getpass import getpass
 from xml.dom.minidom import parseString
+from xmltodict import parse
+from pprint import pprint
 
 device_ip = input('Enter the IP address of the Network device: ')
 username = input("Please use your username: ")
@@ -29,9 +35,17 @@ int_filter = """
 
 running_config = netconf_inputs.get_config(filter = int_filter, source = "running")
 pretty_running_conf = parseString(running_config.xml).toprettyxml()
+int_dict = parse(pretty_running_conf)
+int_list = int_dict["rpc-reply"]['data']["interfaces"]["interface"]
 
-myfile = open(r"newoutput.xml",'w')
-myfile.write(pretty_running_conf)
-myfile.close()
 
-print("File content is now extracted and saved!")
+for int_details in int_list:
+    print(int_details['name'])
+    try:
+        int_ip = int_details["ipv4"]["address"]["ip"]
+    except:
+        int_ip = "not_configured"
+    print("The IP address for the above mentioned interface is " + int_ip)
+
+
+

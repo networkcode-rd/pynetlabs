@@ -1,3 +1,4 @@
+# For configuring multiple interfaces and type of interfaces.
 from ncclient import manager
 from getpass import getpass
 
