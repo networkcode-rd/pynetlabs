@@ -1,0 +1,2 @@
+show interface description
+show ip interface brief
